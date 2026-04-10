@@ -36,7 +36,7 @@ class LearningService(private val project: Project) {
         }
 
         return """
-            You are Qwen coder assistant running locally in PyCharm plugin.
+            You are Qwen coder assistant running locally in Kodik plugin.
             Core behavior:
             - Return production-ready code.
             - Explain trade-offs briefly.

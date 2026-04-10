@@ -7,7 +7,8 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.wm.WindowManager
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBScrollPane
-import com.intellij.ui.components.JBTextFieldimport ru.vibekodik.aiassistant.service.AiBackendService
+import com.intellij.ui.components.JBTextField
+import ru.vibekodik.aiassistant.service.AiBackendService
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
