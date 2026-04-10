@@ -7,9 +7,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.wm.WindowManager
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBScrollPane
-import com.intellij.ui.components.JBTextArea
-import com.intellij.ui.components.JBTextField
-import ru.vibekodik.aiassistant.service.AiBackendService
+import com.intellij.ui.components.JBTextFieldimport ru.vibekodik.aiassistant.service.AiBackendService
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
@@ -51,17 +49,19 @@ class ChatPanel(private val project: Project) : JPanel(BorderLayout()) {
         val fixButton = JButton("Исправить код")
         val generateFileButton = JButton("Сгенерировать файл")
         val teachButton = JButton("Обучить AI")
+        val showRulesButton = JButton("Показать правила")
 
         insertButton.addActionListener { insertToEditor(lastResponse) }
         fixButton.addActionListener { onQuickFix() }
         generateFileButton.addActionListener { onGenerateFile() }
         teachButton.addActionListener { onTeach() }
+        showRulesButton.addActionListener { onShowRules() }
 
         actionsPanel.add(insertButton)
         actionsPanel.add(fixButton)
         actionsPanel.add(generateFileButton)
         actionsPanel.add(teachButton)
-
+        actionsPanel.add(showRulesButton)
         add(JLabel("Kodik AI Assistant"), BorderLayout.NORTH)
         add(scrollPane, BorderLayout.CENTER)
 
@@ -77,6 +77,7 @@ class ChatPanel(private val project: Project) : JPanel(BorderLayout()) {
             return
         }
         append("👤 You: $prompt\n")
+        append("⏳ Обрабатываю запрос локальной моделью Qwen...\n")
         input.text = ""
 
         ApplicationManager.getApplication().executeOnPooledThread {
@@ -108,7 +109,7 @@ class ChatPanel(private val project: Project) : JPanel(BorderLayout()) {
     private fun onTeach() {
         val instruction = Messages.showInputDialog(
             project,
-            "Введите правило, которому ассистент должен следовать:",
+            "Введите правило, которому ассистент должен следовать:\nПример: Всегда предлагай минимум 2 варианта рефакторинга и тесты pytest.",
             "Обучение ассистента",
             Messages.getQuestionIcon()
         ) ?: return
@@ -117,8 +118,18 @@ class ChatPanel(private val project: Project) : JPanel(BorderLayout()) {
         append("🧠 AI обучен новому правилу: $instruction\n\n")
     }
 
-    private fun insertToEditor(text: String) {
-        if (text.isBlank()) {
+    private fun onShowRules() {
+        val rules = backend.showRules()
+        if (rules.isEmpty()) {
+            append("📭 Пока нет обучающих правил.\n\n")
+            return
+        }
+
+        val formatted = rules.mapIndexed { index, value -> "${index + 1}) $value" }.joinToString("\n")
+        append("📘 Текущие правила обучения:\n$formatted\n\n")
+    }
+
+    private fun insertToEditor(text: String) {        if (text.isBlank()) {
             append("⚠️ Нет ответа для вставки.\n\n")
             return
         }

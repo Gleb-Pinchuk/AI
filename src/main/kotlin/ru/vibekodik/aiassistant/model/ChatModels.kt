@@ -5,22 +5,23 @@ data class ChatMessage(
     val content: String
 )
 
-data class ChatRequest(
+data class OllamaOptions(
+    val temperature: Double = 0.2,
+    val num_predict: Int = 1024
+)
+
+data class OllamaChatRequest(
     val model: String,
     val messages: List<ChatMessage>,
-    val temperature: Double = 0.2
+    val stream: Boolean = false,
+    val options: OllamaOptions = OllamaOptions()
 )
 
-data class ChatChoice(
-    val index: Int,
-    val message: ChatMessage
+data class OllamaChatResponse(
+    val model: String?,
+    val message: ChatMessage?,
+    val done: Boolean?
 )
-
-data class ChatResponse(
-    val id: String,
-    val choices: List<ChatChoice>
-)
-
 data class LearningRecord(
     val prompt: String,
     val response: String,
