@@ -1,0 +1,18 @@
+<idea-plugin>
+    <id>ru.vibekodik.aiassistant</id>
+    <name>Kodik AI Assistant</name>
+    <vendor email="support@vibekodik.ru" url="https://vibekodik.ru">Kodik AI</vendor>
+
+    <description><![CDATA[
+        AI coding assistant for PyCharm with chat, code generation, refactoring, and project-aware context.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.python</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Kodik AI" factoryClass="ru.vibekodik.aiassistant.ui.AiAssistantToolWindowFactory" anchor="right"/>
+        <projectService serviceImplementation="ru.vibekodik.aiassistant.service.LearningService"/>
+        <projectService serviceImplementation="ru.vibekodik.aiassistant.service.ProjectContextService"/>
+    </extensions>
+</idea-plugin>
