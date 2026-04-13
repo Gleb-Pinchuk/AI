@@ -12,6 +12,8 @@ repositories {
 }
 
 val localPyCharmPath = System.getenv("PYCHARM_LOCAL_PATH")?.trim().orEmpty()
+val proxyHost = System.getenv("AI_PROXY_HOST")?.trim().orEmpty()
+val proxyPort = System.getenv("AI_PROXY_PORT")?.trim().orEmpty()
 
 dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
@@ -43,7 +45,23 @@ tasks {
     named("buildSearchableOptions") {
         enabled = false
     }
+
     named("instrumentCode") {
         enabled = false
+    }
+
+    named("runIde") {
+        if (proxyHost.isNotBlank() && proxyPort.isNotBlank()) {
+            doFirst {
+                println("runIde proxy enabled: $proxyHost:$proxyPort")
+            }
+            (this as JavaExec).jvmArgs(
+                "-Djava.net.useSystemProxies=true",
+                "-Dhttps.proxyHost=$proxyHost",
+                "-Dhttps.proxyPort=$proxyPort",
+                "-Dhttp.proxyHost=$proxyHost",
+                "-Dhttp.proxyPort=$proxyPort"
+            )
+        }
     }
 }
