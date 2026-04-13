@@ -19,8 +19,12 @@ class OllamaClient(
 ) {
     private val logger = Logger.getInstance(OllamaClient::class.java)
     private val httpClient = OkHttpClient.Builder()
-        .callTimeout(120, TimeUnit.SECONDS)
+        .connectTimeout(30, TimeUnit.SECONDS)
+        .readTimeout(300, TimeUnit.SECONDS)
+        .writeTimeout(300, TimeUnit.SECONDS)
+        .callTimeout(300, TimeUnit.SECONDS)
         .build()
+
     private val mapper = jacksonObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 

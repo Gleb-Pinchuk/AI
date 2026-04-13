@@ -18,8 +18,9 @@ data class ChatResponse(
     val choices: List<ChatChoice> = emptyList()
 )
 
-data class OllamaOptions(    val temperature: Double = 0.2,
-    val num_predict: Int = 1024
+data class OllamaOptions(
+    val temperature: Double = 0.2,
+    val num_predict: Int = 256
 )
 
 data class OllamaChatRequest(

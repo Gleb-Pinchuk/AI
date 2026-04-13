@@ -14,7 +14,8 @@ class AiBackendService(private val project: Project) {
 
     private val ollamaModel = System.getenv("OLLAMA_MODEL") ?: "qwen2.5-coder:7b"
     private val ollamaEndpoint = System.getenv("OLLAMA_ENDPOINT") ?: "http://localhost:11434/api/chat"
-    private val maxOutputTokens = System.getenv("AI_MAX_OUTPUT_TOKENS")?.toIntOrNull() ?: 1024
+    private val maxOutputTokens = (System.getenv("AI_MAX_OUTPUT_TOKENS")?.toIntOrNull() ?: 256)
+        .coerceIn(64, 512)
     private val maxRequestsPerMinute = System.getenv("AI_MAX_REQUESTS_PER_MINUTE")?.toIntOrNull() ?: 20
 
     private val requestLimiter = SlidingWindowRateLimiter(maxRequestsPerMinute, 60_000)
