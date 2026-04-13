@@ -15,19 +15,27 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.1")
 }
 
-intellij {
-    version.set("2024.1")
-    type.set("PY")
-    plugins.set(listOf("com.intellij.java"))
+kotlin {
+    jvmToolchain(17)
 }
 
+val localPyCharmPath = System.getenv("PYCHARM_LOCAL_PATH")?.trim().orEmpty()
+
+intellij {
+    if (localPyCharmPath.isNotBlank()) {
+        localPath.set(localPyCharmPath)
+    } else {
+        version.set("2024.1")
+        type.set("PC")
+    }
+}
 tasks {
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         kotlinOptions.jvmTarget = "17"
     }
 
     patchPluginXml {
         sinceBuild.set("241")
-        untilBuild.set("251.*")
+        untilBuild.set("241.*")
     }
 }

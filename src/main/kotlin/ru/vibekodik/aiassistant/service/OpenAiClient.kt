@@ -10,6 +10,10 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import ru.vibekodik.aiassistant.model.ChatMessage
 import ru.vibekodik.aiassistant.model.ChatRequest
 import ru.vibekodik.aiassistant.model.ChatResponse
+import okhttp3.Credentials
+import okhttp3.Route
+import java.net.InetSocketAddress
+import java.net.Proxy
 import java.util.concurrent.TimeUnit
 
 class OpenAiClient(
@@ -17,12 +21,9 @@ class OpenAiClient(
     private val endpoint: String = "https://api.openai.com/v1/chat/completions"
 ) {
     private val logger = Logger.getInstance(OpenAiClient::class.java)
-    private val httpClient = OkHttpClient.Builder()
-        .callTimeout(60, TimeUnit.SECONDS)
-        .build()
+    private val httpClient = buildHttpClient()
     private val mapper = jacksonObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-
     fun chat(systemPrompt: String, userPrompt: String): Result<String> {
         return try {
             val requestBody = ChatRequest(
@@ -59,5 +60,33 @@ class OpenAiClient(
             logger.warn("OpenAI request exception", e)
             Result.failure(e)
         }
+    }
+
+    private fun buildHttpClient(): OkHttpClient {
+        val proxyHost = System.getenv("AI_PROXY_HOST")?.trim().orEmpty()
+        val proxyPort = System.getenv("AI_PROXY_PORT")?.toIntOrNull()
+
+        val builder = OkHttpClient.Builder()
+            .callTimeout(60, TimeUnit.SECONDS)
+
+        if (proxyHost.isNotBlank() && proxyPort != null) {
+            val proxy = Proxy(Proxy.Type.HTTP, InetSocketAddress(proxyHost, proxyPort))
+            builder.proxy(proxy)
+
+            val proxyUser = System.getenv("AI_PROXY_USER")?.trim().orEmpty()
+            val proxyPassword = System.getenv("AI_PROXY_PASSWORD")?.trim().orEmpty()
+            if (proxyUser.isNotBlank()) {
+                val credentials = Credentials.basic(proxyUser, proxyPassword)
+                builder.proxyAuthenticator { _: Route?, response ->
+                    response.request.newBuilder()
+                        .header("Proxy-Authorization", credentials)
+                        .build()
+                }
+            }
+
+            logger.info("OpenAI client uses proxy $proxyHost:$proxyPort")
+        }
+
+        return builder.build()
     }
 }
