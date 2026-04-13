@@ -1,41 +1,49 @@
 plugins {
-    kotlin("jvm") version "1.9.24"
-    id("org.jetbrains.intellij") version "1.17.4"
-}
-
-group = "ru.vibekodik"
+    kotlin("jvm") version "2.1.21"
+    id("org.jetbrains.intellij.platform") version "2.5.0"
+}group = "ru.vibekodik"
 version = "0.1.0"
 
 repositories {
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
+
+val localPyCharmPath = System.getenv("PYCHARM_LOCAL_PATH")?.trim().orEmpty()
 
 dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.1")
+
+    intellijPlatform {
+        if (localPyCharmPath.isNotBlank()) {
+            local(localPyCharmPath)
+        } else {
+            pycharmCommunity("2025.1.2")
+        }
+    }
 }
 
 kotlin {
     jvmToolchain(17)
 }
 
-val localPyCharmPath = System.getenv("PYCHARM_LOCAL_PATH")?.trim().orEmpty()
-
-intellij {
-    if (localPyCharmPath.isNotBlank()) {
-        localPath.set(localPyCharmPath)
-    } else {
-        version.set("2024.1")
-        type.set("PC")
-    }
-}
 tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = "17"
+        compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 
     patchPluginXml {
-        sinceBuild.set("241")
-        untilBuild.set("241.*")
+        sinceBuild.set("251")
+        untilBuild.set("251.*")
+    }
+
+    named("buildSearchableOptions") {
+        enabled = false
+    }
+    named("instrumentCode") {
+        enabled = false
     }
 }
