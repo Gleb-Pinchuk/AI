@@ -1,0 +1,108 @@
+{
+	"type": "filament",
+	"name": "Creality Hyper PLA @Voron Rapido 0.4 SS",
+	"inherits": "Hyper PLA @K1C-all",
+	"from": "User",
+	"instantiation": "true",
+	"filament_vendor": [
+		"Creality"
+	],
+	"filament_type": [
+		"PLA"
+	],
+	"filament_flow_ratio": [
+		"0.98"
+	],
+	"filament_max_volumetric_speed": [
+		"32"
+	],
+	"nozzle_temperature": [
+		"225"
+	],
+	"nozzle_temperature_initial_layer": [
+		"225"
+	],
+	"nozzle_temperature_range_low": [
+		"190"
+	],
+	"nozzle_temperature_range_high": [
+		"240"
+	],
+	"cool_plate_temp": [
+		"60"
+	],
+	"cool_plate_temp_initial_layer": [
+		"60"
+	],
+	"eng_plate_temp": [
+		"60"
+	],
+	"eng_plate_temp_initial_layer": [
+		"60"
+	],
+	"hot_plate_temp": [
+		"60"
+	],
+	"hot_plate_temp_initial_layer": [
+		"60"
+	],
+	"textured_plate_temp": [
+		"60"
+	],
+	"textured_plate_temp_initial_layer": [
+		"60"
+	],
+	"fan_max_speed": [
+		"100"
+	],
+	"fan_min_speed": [
+		"100"
+	],
+	"full_fan_speed_layer": [
+		"2"
+	],
+	"disable_fan_first_layers": [
+		"1"
+	],
+	"slow_down_for_layer_cooling": [
+		"1"
+	],
+	"slow_down_layer_time": [
+		"5"
+	],
+	"slow_down_min_speed": [
+		"50"
+	],
+	"reduce_fan_stop_start_freq": [
+		"0"
+	],
+	"enable_pressure_advance": [
+		"1"
+	],
+	"pressure_advance": [
+		"0.035"
+	],
+	"filament_retraction_length": [
+		"nil"
+	],
+	"filament_retraction_speed": [
+		"nil"
+	],
+	"filament_deretraction_speed": [
+		"nil"
+	],
+	"filament_retract_before_wipe": [
+		"nil"
+	],
+	"filament_wipe": [
+		"nil"
+	],
+	"filament_z_hop": [
+		"nil"
+	],
+	"compatible_printers": [
+		"Voron 2.4 250 Rapido HF 0.4 SS",
+		"Voron 2.4 300 Rapido HF 0.4 SS",
+		"Voron 2.4 350 Rapido HF 0.4 SS"
+	]
+}
